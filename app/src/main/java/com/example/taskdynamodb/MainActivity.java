@@ -1,21 +1,24 @@
 package com.example.taskdynamodb;
 
-import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
+
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class MainActivity extends AppCompatActivity {
 
-    Context context;
-    DatabaseAccess databaseAccess;
+    private Repository repository;
+    DynamoDBMapper dynamoDBMapper;
     RecyclerView recyclerView;
     Adapter adapter;
     List<NewsDo> list = new ArrayList<>();
@@ -28,9 +31,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        context = this;
-        scanAllData();
+//        viewModel = ViewModelProviders.of(this).get(ViewModel.class);
+//        list = viewModel.getAllData();
 
+
+        repository = new Repository();
+        dynamoDBMapper = new DatabaseAccess(this).getDynamoDBMapper();
+        getAllData();
 
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -56,12 +63,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void scanAllData() {
-        new Thread(() -> {
-            databaseAccess = new DatabaseAccess(context);
-            list = databaseAccess.getAllData();
+    public void getAllData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                list=  repository.getAllData(dynamoDBMapper);
+            }
         }).start();
     }
-
 
 }

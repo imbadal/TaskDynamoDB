@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
@@ -27,6 +29,17 @@ public class DatabaseAccess {
         this.context = context;
 
         AWSMobileClient.getInstance().initialize(context).execute();
+//        AWSMobileClient.getInstance().initialize(context,new AWSConfiguration(context,R.raw.awsconfiguration), new Callback<UserStateDetails>() {
+//            @Override
+//            public void onResult(UserStateDetails result) {
+//
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//
+//            }
+//        });
         AWSCredentialsProvider credentialsProvider = AWSMobileClient.getInstance().getCredentialsProvider();
         AWSConfiguration configuration = AWSMobileClient.getInstance().getConfiguration();
         AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider);
@@ -50,6 +63,7 @@ public class DatabaseAccess {
         return instance;
     }
 
-
-
+    public DynamoDBMapper getDynamoDBMapper() {
+        return dynamoDBMapper;
+    }
 }
