@@ -1,0 +1,19 @@
+{
+  "Version": "1",
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "ap-south-1:60314d52-74b2-4a50-92e2-ea4828bc8775",
+        "Region": "ap-south-1"
+      }
+    }
+  },
+  "IdentityManager": {
+    "Default": {}
+  },
+  "DynamoDBObjectMapper": {
+    "Default": {
+      "Region": "ap-south-1"
+    }
+  }
+}
